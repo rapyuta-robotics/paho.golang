@@ -70,7 +70,7 @@ func (p *PingHandler) Start(c net.Conn, pt time.Duration) {
 		case <-p.stop:
 			return
 		case <-checkTicker.C:
-			if atomic.LoadInt32(&p.pingOutstanding) > 0 && time.Since(p.lastPing) > (pt+pt>>1) {
+			if atomic.LoadInt32(&p.pingOutstanding) > 0 && time.Since(p.lastPing) >= pt {
 				p.pingFailHandler(fmt.Errorf("ping resp timed out"))
 				//ping outstanding and not reset in 1.5 times ping timer
 				return
